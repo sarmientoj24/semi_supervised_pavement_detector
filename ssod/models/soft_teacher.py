@@ -72,12 +72,12 @@ class SoftTeacher(MultiStreamDetector):
                 [teacher_data["proposals"][idx] for idx in tidx] if ("proposals" in teacher_data) and
                     (teacher_data["proposals"] is not None) else None,
             )
-        student_info = sef.extract_student_info(**student_data)
+        student_info = self.extract_student_info(**student_data)
         
         return self.compute_pseudo_label_loss(student_info, teacher_info)
     
     
-    def compute_pesudo_label_loss(self, student_info, teacher_info):
+    def compute_pseudo_label_loss(self, student_info, teacher_info):
         M = self._get_trans_mat(
             teacher_info["transform_matrix"], student_info["transform_matrix"]
         )
@@ -211,7 +211,7 @@ class SoftTeacher(MultiStreamDetector):
             {"rcnn_cls_gt_num": sum([len(bbox) for bbox in gt_bboxes]) / len(gt_bboxes)}
         )
         
-sampling_results = self.get_sampling_result(
+        sampling_results = self.get_sampling_result(
             img_metas,
             proposal_list,
             gt_bboxes,
@@ -391,7 +391,7 @@ sampling_results = self.get_sampling_result(
                         proposal_label,
                         proposal[:, -1],
                         thr=thr,
-                        min_size=self.train_cfg.min_pseduo_box_size,
+                        min_size=self.train_cfg.min_pseudo_box_size,
                     )
                     for proposal, proposal_label in zip(
                         proposal_list, proposal_label_list
